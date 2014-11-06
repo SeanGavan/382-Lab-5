@@ -14,3 +14,15 @@
 |   Data 0 logic 1 half-pulse   |               |                | 
 |   Stop logic 0 half-pulse     |               |                |
 |   Stop logic 1 half-pulse     |               |                | 
+
+| Button     | code (not including start and stop bits) |
+| ---------- | ---------------------------------------- |
+| 0          |               |
+| 1          |               |
+| 2          |               |
+| 3          |               | 
+| Power      |               | 
+| VOL +      |               |
+| VOL -      |               |
+| CH +       |               | 
+| CH -       |               | 
