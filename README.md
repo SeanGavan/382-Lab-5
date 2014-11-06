@@ -17,12 +17,12 @@
 
 | Button     | code (not including start and stop bits) |
 | ---------- | ---------------------------------------- |
-| 0          |               |
-| 1          |               |
-| 2          |               |
-| 3          |               | 
-| Power      |               | 
-| VOL +      |               |
-| VOL -      |               |
-| CH +       |               | 
-| CH -       |               | 
+| 1          |     FF08F7    |
+| 2          |     FFC03F    |
+| 3          |     FF807F    |
+| 4          |     FF609F    | 
+| Enter      |     FFA05F    | 
+| Pause      |     FF38C7    |
+| Stop       |     FF28D7    |
+| Slow       |     FFF00F    | 
+| Step       |     FF30CF    | 
