@@ -34,16 +34,21 @@ The purpose of the lab was to use a timer and interrupts in order to decode data
 
 ### Software flow chart / algorithms
 The lab code flows in such a way as to first poll for an IR packet to be received. Once this is done, an interrupt occurs that says that the value of a pin has been changed. The interrupt then uses the timer to determine whether the edge is that of a falling edge or a rising edge, and whether the data is a logic 1 or 0. The value is then stored and compared to that of the predetermined code for the "1" or "2" button on remote control #2. If a match is found, the respective LED (1 or 2) will toggle.
+
 ### Hardware schematic
 ![alt text](https://raw.githubusercontent.com/SeanGavan/382-Lab-5/master/Images/Schematic.PNG "IR Sensor Schematic")
 
 ### Well-formatted code
 Code for this lab may be found in the Code folder.
+
 ### Debugging
+A major flaw in the code to begin was that the timer and interrupt would not run in a way that would write to the array. After including the features provided on the lab page, this problem ceased to occur. Aftwerwards, the only problem was that of getting the LEDs to toggle on and off. This was soon remedied, and required functionality had been met.
 
 ### Testing methodology / results
+The coding began by first decrypting the packets sent by the remote control. This meant finding out what each button's unique signal was in binary and then hex. The timer then needed to be modified so that it could measure the pulses of logic zeroes and ones. Once this had been accomplished, a test had to be done to see whether the array was containing new data. Once this was found to be true, and then once the code matched that predetermined value, the LEDs had to be tested to see if they would toggle. 
 
 ### Observations and Conclusions
+It can be seen that timers can be used for variables that change over time. Since the timer can be modified, it can serve even more purposes than those used in this lab.
 
 ### Documentation 
 Documentation for this lab includes C2C Terragnoli for providing clues as to where code should be put within the start5.c file.
