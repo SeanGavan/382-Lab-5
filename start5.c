@@ -1,8 +1,9 @@
 //-----------------------------------------------------------------
-// Name:	Coulston
-// File:	lab5.c
+// Name:	Sean Gavan
+// File:	start5.c
 // Date:	Fall 2014
-// Purp:	Demo the decoding of an IR packet
+// Purp:	Decode the IR packet, and use the data to toggle one LED with the "1" button on the remote
+//			control, and the "2" button on the remote control. The control used was #2.
 //-----------------------------------------------------------------
 #include <msp430g2553.h>
 #include "start5.h"
@@ -10,7 +11,7 @@
 int8	newIrPacket = FALSE;
 int16	packetData[34];
 int8	packetIndex = 0;
-int32	irPacket = 0;
+int32	irPacket = 0;			// holds the binary coding from the IR packet
 
 // -----------------------------------------------------------------------
 // -----------------------------------------------------------------------
@@ -22,22 +23,14 @@ void main(void) {
 
 		if(packetIndex > 33){
 			packetIndex = 0;
-		}	// end if new IR packet arrived
+		}						// end if new IR packet arrived
 		if(newIrPacket){
-			if(irPacket == ONE){
-				if(P1OUT &= ~BIT0){
-					P1OUT |= BIT0;
-				} else {
-					P1OUT &= ~BIT0;
-				}
-			} else if(irPacket == TWO){
-				if(P1OUT &= ~BIT6){
-					P1OUT |= BIT6;
-				} else {
-					P1OUT &= ~BIT6;
-				}
+			if(irPacket == ONE){			// if the "1" button was pressed
+				P1OUT^=BIT0;				// toggle LED1
+			} else if(irPacket == TWO){		// if the "2" button
+				P1OUT^=BIT6;				// toggle LED2
 			}
-			newIrPacket = FALSE;
+			newIrPacket = FALSE;			// set variable to false to avoid endless loop
 		}
 
 	}// end infinite loop
@@ -116,25 +109,28 @@ __interrupt void pinChange (void) {
 
 	switch (pin) {					// read the current pin level
 		case 0:						// !!!!!!!!!NEGATIVE EDGE!!!!!!!!!!
-			pulseDuration = TAR;
+			pulseDuration = TAR;	//read TAR
+			// Classify logic and shift bit to irPacket
+			// logic 1
 			if((pulseDuration > minLogic1Pulse) && (pulseDuration < minStartPulse)){
 				irPacket = (irPacket<<1);
 				irPacket += 1;
+			// logic 0
 			} else if(pulseDuration < maxLogic0Pulse){
 				irPacket = (irPacket<<1);
 				irPacket += 0;
 			}
-			packetData[packetIndex++] = pulseDuration;
-			TACTL =	MC_0;
-			TAR = 0x0000;
+			packetData[packetIndex++] = pulseDuration; // TAR into pocketData
+			TACTL =	MC_0; // Turn timerA off
+			TAR = 0x0000; // reset TAR
 			LOW_2_HIGH; 				// Setup pin interrupr on positive edge
 			break;
 
 		case 1:							// !!!!!!!!POSITIVE EDGE!!!!!!!!!!!
 			TAR = 0x0000;						// time measurements are based at time 0
 			TACCR0 = 0x8000;
-			TACTL &= ~TAIFG;
-			TACTL = ID_3 | TASSEL_2 | MC_1 | TAIE;
+			TACTL &= ~TAIFG;	// timerA on
+			TACTL = ID_3 | TASSEL_2 | MC_1 | TAIE; // timerA interrupt
 			HIGH_2_LOW; 						// Setup pin interrupr on positive edge
 			break;
 	} // end switch
@@ -156,9 +152,9 @@ __interrupt void pinChange (void) {
 #pragma vector = TIMER0_A1_VECTOR			// This is from the MSP430G2553.h file
 __interrupt void timerOverflow (void) {
 
-	TACTL =	MC_0;
+	TACTL =	MC_0;	// turn off timerA
 	TAR = 0x0000;
-	newIrPacket = TRUE;
-	packetIndex = 0;
-	TACTL &= ~TAIFG;
+	newIrPacket = TRUE; // set flag for new IR
+	packetIndex = 0;	// clear packetIndex
+	TACTL &= ~TAIFG;	// clear TAIFG
 }

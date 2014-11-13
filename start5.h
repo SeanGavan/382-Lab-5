@@ -1,8 +1,10 @@
 //-----------------------------------------------------------------
-// Name:	Coulston
-// File:	lab5.h
+// Name:	Sean Gavan
+// File:	start5.h
 // Date:	Fall 2014
-// Purp:	Include file for the MSP430
+// Purp:	Include file for the MSP430 so as to know what the code for
+//			each remote control button is as well as the logic pulses
+//			used in the timer.
 //-----------------------------------------------------------------
 
 //-----------------------------------------------------------------
@@ -34,7 +36,7 @@ __interrupt void timerOverflow (void);
 #define		HIGH_2_LOW		P2IES |= BIT6
 #define		LOW_2_HIGH		P2IES &= ~BIT6
 
-#define		averageLogic0Pulse	0x0200
+#define		averageLogic0Pulse	0x0200		// Pulse length for either a 0, 1, or Start/Stop bit
 #define		averageLogic1Pulse	0x0465
 #define		averageStartPulse	0x2314
 #define		minLogic0Pulse		averageLogic0Pulse - 100
@@ -44,8 +46,8 @@ __interrupt void timerOverflow (void);
 #define		minStartPulse		averageStartPulse - 100
 #define		maxStartPulse		averageStartPulse + 100
 
-#define		ONE		0xFF08F7
-#define		TWO		0xFFC03F
+#define		ONE		0xFF08F7	// Hex code for 9 remote control buttons
+#define		TWO		0xFFC03F	// Converted from the binary data on the logic analyzer
 #define		THR		0xFF807F
 #define		FOR		0xFF609F
 
